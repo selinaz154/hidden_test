@@ -1,0 +1,24 @@
+name: Issue to File
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  update-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Update submissions.txt
+        run: |
+          echo "- ${{ github.event.issue.title }}: ${{ github.event.issue.body }}" >> submissions.txt
+          
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add submissions.txt
+          git commit -m "Update submissions.txt from issue #${{ github.event.issue.number }}"
+          git push

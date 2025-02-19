@@ -35,7 +35,7 @@
         <div class="popup-content">
             <span class="close" onclick="document.getElementById('popup').style.display='none'">&times;</span>
             <h2>Welcome to our site!</h2>
-            <form id="scientistForm" action="http://localhost:1313/submit" method="POST">
+            <form id="scientistForm">
                 <div>
                     <label for="firstName">First Name:</label>
                     <input type="text" id="firstName" name="firstName" required>
@@ -53,7 +53,7 @@
                     <input type="text" id="courses" name="courses" placeholder="List courses separated by commas">
                 </div>
                 <div>
-                    <button type="submit">Submit</button>
+                    <button type="button" id="submitBtn">Submit</button>
                     <button type="button" onclick="document.getElementById('popup').style.display='none'">Close</button>
                 </div>
             </form>
@@ -71,6 +71,28 @@
                 if (event.target == popup) {
                     popup.style.display = 'none';
                 }
+            });
+
+            document.getElementById('submitBtn').addEventListener('click', function() {
+                var formData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    researchArea: document.getElementById('researchArea').value,
+                    courses: document.getElementById('courses').value
+                };
+                fetch('https://your-proxy-endpoint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                }).then(response => response.json())
+                .then(data => {
+                    alert('Submission successful!');
+                    document.getElementById('popup').style.display = 'none';
+                }).catch(error => {
+                    alert('Failed to submit. Please try again.');
+                });
             });
         });
     </script>
